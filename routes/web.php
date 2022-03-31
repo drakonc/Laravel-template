@@ -22,4 +22,5 @@ Route::get('/login',[ConnectConrtoller::class,'GetLogin'])->name('guest.login');
 
 Route::get('/',[DashboardController::class,'getHome'])->name('admin.home');
 
-Route::resource('roles', RoleConrtoller::class);
+Route::resource('roles', RoleConrtoller::class)->except(['destroy']);
+Route::get('/roles/{id}/destroy',[RoleConrtoller::class,'destroy'])->name('roles.destroy');

@@ -42,7 +42,7 @@
                                 <td width="50%">{{$role->name}}</td>
                                 <td width="10%" class="text-center">
                                     <a href="{{route('roles.edit',$role->id)}}" class="btn btn-primary btn-circle"><i class="fas fa-edit"></i></a>
-                                    <a href="" class="btn btn-danger btn-circle btn-confirm" data-object="{{$role}}" data-path="roles">
+                                    <a href="" class="btn btn-danger btn-circle btn-confirm" data-object="roles/{{ $role->id}}" data-path="destroy">
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 </td>

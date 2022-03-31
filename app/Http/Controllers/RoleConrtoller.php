@@ -17,18 +17,23 @@ class RoleConrtoller extends Controller
 
   
     public function create(){
-        //
+        $permission = Permission::get();
+        return view('roles.crear',compact('permission'));
     }
 
 
     public function store(Request $request){
-        //
+        $this->validate($request, [
+            'name' => 'required|unique:roles,name',
+            'permission' => 'required',
+        ]);
+    
+        $role = Role::create(['name' => $request->input('name')]);
+        $role->syncPermissions($request->input('permission'));
+    
+        return redirect()->route('roles.index');
     }
 
-
-    public function show($id){
-        //
-    }
 
 
     public function edit($id){
@@ -43,11 +48,22 @@ class RoleConrtoller extends Controller
 
 
     public function update(Request $request, $id){
-        //
+        $this->validate($request, [
+            'permission' => 'required',
+        ]);
+        $role = Role::find($id);
+        $role->syncPermissions($request->input('permission'));    
+        return redirect()->route('roles.index');
     }
 
   
-    public function destroy($id){
-        //
+    public function destroy($id){  
+        try 
+        {
+            DB::table("roles")->where('id',$id)->delete();
+            return back()->with('message','Role Eliminado Exitosamente')->with('typealert','success')->withInput();  
+        }catch (Exception $e) {
+            return back()->json($e->getMessage(), 500);
+        }
     }
 }

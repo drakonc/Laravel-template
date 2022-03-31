@@ -45,7 +45,7 @@ function confirm_object(e) {
   e.preventDefault();
   var object = this.getAttribute('data-object');
   var path = this.getAttribute('data-path');
-  var url = base + '/' + path + '/' + object;
+  var url = base + '/' + object + '/' + path;
   var title, text, icon, text_buton;
   title = "¿Quiere Eliminar Este Elemento?";
   text = "Recuerda que esta Acción Eliminara el Rol";
