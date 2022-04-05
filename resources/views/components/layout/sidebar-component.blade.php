@@ -58,12 +58,12 @@
                 </li>
                 <li class="app-sidebar__heading">Configuración</li>
                 <li >
-                    <a href="" class="lk-rolesListar lk-roles.index lk-roles.edit lk-roles.create">
+                    <a href="{{route('roles.index')}}" class="lk-roles.index lk-roles.edit lk-roles.create">
                         <i class="metismenu-icon fa-sitemap fa fa-fwr"></i> Roles
                     </a>
                 </li>
                 <li>
-                    <a href="" class="lk-usuariosListar lk-usuariosCrear">
+                    <a href="{{route('usuarios.index')}}" class="lk-usuarios.index lk-usuarios.edit lk-usuarios.create">
                         <i class="metismenu-icon fa-user-secret fa fa-fw"></i> Usuarios
                     </a>
                 </li>

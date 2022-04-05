@@ -16,11 +16,6 @@ class CrearUsuarioRequest extends FormRequest
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
     public function rules()
     {
         return [
@@ -28,7 +23,7 @@ class CrearUsuarioRequest extends FormRequest
             'apellidos' => 'required',
             'usuario' => 'required|min:4|max:15|unique:App\Models\Usuario,usuario',
             'email' => 'required|email|unique:App\Models\Usuario,email',
-            'rol_id' => 'required',
+            'role' => 'required',
             'password' => 'required|min:8|max:25',
             'estado' => 'required'
         ];
@@ -46,7 +41,7 @@ class CrearUsuarioRequest extends FormRequest
             'email.required' => 'El Correo Electrónico es Requerido.',
             'email.email' => 'El Formato de su Correo Electrónico es Invalido.',
             'email.unique' => 'Ya Existe un Usuario Registrado con ese Correo Electrónico.',            
-            'rol_id.required' => 'El Rol es Requerido.',
+            'role.required' => 'El Rol es Requerido.',
             'password.required' => 'La contraseña es Requerida',
             'password.min' => 'La Contraseña Debe Tener al Menos 8 Caracteres.',
             'password.max' => 'La Contraseña Debe Tener al Maximo 25 Caracteres.',
@@ -61,7 +56,7 @@ class CrearUsuarioRequest extends FormRequest
             'apellidos' => 'Apellidos del usuario',
             'usuario' => 'Usuario del Sistema',
             'email' => 'Correo Electronico',
-            'rol_id' => 'Role del usuario',
+            'role' => 'Role del usuario',
             'password' => 'Contraseña',
             'estado' => 'Estado'
         ];

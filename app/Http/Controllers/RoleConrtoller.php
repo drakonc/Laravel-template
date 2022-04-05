@@ -2,68 +2,64 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
-use Illuminate\Support\Facades\DB;
-use Spatie\Permission\Models\Permission;
+
+use App\Repositories\RoleRepository;
+use App\Http\Requests\Role\{CrearRoleRequest, EditarRoleRequest};
 
 class RoleConrtoller extends Controller
 {
+
+    private $roleRepository;
+
+    public function __construct(RoleRepository $roleRepository){
+        $this->roleRepository = $roleRepository;
+    }
   
     public function index(){
-        $roles = Role::get();
+        $roles = $this->roleRepository->ObtenerTodosLosRoles();
         return view('roles.index')->with('roles', $roles);
     }
 
   
     public function create(){
-        $permission = Permission::get();
-        return view('roles.crear',compact('permission'));
+        $permission = $this->roleRepository->ObtenerTodosLosPermisos();
+        return view('roles.crear')->with('permission', $permission);
     }
 
 
-    public function store(Request $request){
-        $this->validate($request, [
-            'name' => 'required|unique:roles,name',
-            'permission' => 'required',
-        ]);
-    
-        $role = Role::create(['name' => $request->input('name')]);
-        $role->syncPermissions($request->input('permission'));
-    
-        return redirect()->route('roles.index');
+    public function store(CrearRoleRequest $request){
+        $respuesta = $this->roleRepository->CrearRegistro($request);
+        if ($respuesta['status'] == 200){
+            return redirect('/roles')->with('message',$respuesta['message'])->with('typealert',$respuesta['typealert'])->withInput();
+        }else{
+            return back()->with('message',$respuesta['message'])->with('typealert',$respuesta['typealert'])->withInput();
+        }
     }
-
-
 
     public function edit($id){
-        $role = Role::find($id);
-        $permission = Permission::get();
-        $rolePermissions = DB::table("role_has_permissions")->where("role_has_permissions.role_id",$id)
-            ->pluck('role_has_permissions.permission_id','role_has_permissions.permission_id')
-            ->all();
-    
-        return view('roles.edit',compact('role','permission','rolePermissions'));
+        $role = $this->roleRepository->ObtenerUnoRole($id); 
+        $permission = $this->roleRepository->ObtenerTodosLosPermisos();
+        $rolePermissions = $this->roleRepository->ObtenerTodosLosPermisosDeUnRole($id);
+        return view('roles.edit')->with('role', $role)->with('permission', $permission)->with('rolePermissions', $rolePermissions);
     }
 
 
-    public function update(Request $request, $id){
-        $this->validate($request, [
-            'permission' => 'required',
-        ]);
-        $role = Role::find($id);
-        $role->syncPermissions($request->input('permission'));    
-        return redirect()->route('roles.index');
+    public function update(EditarRoleRequest $request, $id){
+        $respuesta = $this->roleRepository->ActualizarRegistro($request,$id);
+        if ($respuesta['status'] == 200){
+            return redirect('/roles')->with('message',$respuesta['message'])->with('typealert',$respuesta['typealert'])->withInput();
+        }else{
+            return back()->with('message',$respuesta['message'])->with('typealert',$respuesta['typealert'])->withInput();
+        }
     }
 
   
-    public function destroy($id){  
-        try 
-        {
-            DB::table("roles")->where('id',$id)->delete();
-            return back()->with('message','Role Eliminado Exitosamente')->with('typealert','success')->withInput();  
-        }catch (Exception $e) {
-            return back()->json($e->getMessage(), 500);
+    public function destroy($id){
+        $respuesta = $this->roleRepository->EliminarRegistro($id);  
+        if ($respuesta['status'] == 200){
+            return back()->with('message',$respuesta['message'])->with('typealert',$respuesta['typealert'])->withInput();
+        }else{
+            return back()->json($respuesta['message'],$respuesta['status']);
         }
     }
 }

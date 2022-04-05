@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleConrtoller;
 use App\Http\Controllers\ConnectConrtoller;
+use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\DashboardController;
 
 /*
@@ -24,3 +25,9 @@ Route::get('/',[DashboardController::class,'getHome'])->name('admin.home');
 
 Route::resource('roles', RoleConrtoller::class)->except(['destroy']);
 Route::get('/roles/{id}/destroy',[RoleConrtoller::class,'destroy'])->name('roles.destroy');
+
+Route::prefix('/usuarios')->group(function () {
+    Route::get('/',[UsuarioController::class,'index'])->name('usuarios.index');
+    Route::get('/create',[UsuarioController::class,'create'])->name('usuarios.create');
+    Route::post('/store',[UsuarioController::class,'store'])->name('usuarios.store');
+});
